@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Formatter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;  /* Side-by-side layout */
+            width: 90%;
+            height: 90%;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-container, .output-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;  /* Both sections take equal space */
+            margin: 10px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+
+        button {
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            margin: 5px;
+            width: auto;
+            height: 30px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        input[type="file"] {
+            display: none; /* Hide the file input */
+        }
+
+        textarea {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: monospace;
+            box-sizing: border-box;
+            overflow: auto;
+            resize: none;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            height: 100%;
+            width: 100%;
+        }
+
+        .copied {
+            background-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-container">
+            <div class="button-container">
+                <button id="uploadButton">Upload JSON</button> <!-- Update button id -->
+                <button id="downloadButton">Download JSON</button>
+                <button id="copyButton">Copy JSON</button>
+            </div>
+            <textarea id="jsonInput" placeholder="Paste your JSON here..." spellcheck="false" ></textarea>
+        </div>
+        <div class="output-container">
+            <textarea id="jsonOutput" placeholder="Formatted JSON will appear here..." spellcheck="false"></textarea> <!-- Made output editable -->
+        </div>
+    </div>
+
+    <!-- Hidden file input element -->
+    <input type="file" id="uploadFile" accept=".json" />
+
+    <script>
+        const jsonInput = document.getElementById('jsonInput');
+        const jsonOutput = document.getElementById('jsonOutput');
+        const uploadFileInput = document.getElementById('uploadFile');
+        const uploadButton = document.getElementById('uploadButton');  // Updated button id
+        const downloadButton = document.getElementById('downloadButton');
+        const copyButton = document.getElementById('copyButton');
+
+        // Event listener for input in the JSON input
+        jsonInput.addEventListener('input', () => {
+            formatJSON();
+        });
+
+        // Format JSON input into JSON output
+        function formatJSON() {
+            const input = jsonInput.value;
+            try {
+                const formatted = JSON.stringify(JSON.parse(input), null, 4);
+                jsonOutput.value = formatted;
+            } catch (error) {
+                jsonOutput.value = 'Invalid JSON';
+            }
+        }
+
+        // Handle file upload by clicking the Upload JSON button
+        uploadButton.addEventListener('click', () => {
+            uploadFileInput.click();  // Trigger file input when the button is clicked
+        });
+
+        // Handle file upload (once a file is selected)
+        uploadFileInput.addEventListener('change', handleFileUpload);
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file && file.type === 'application/json') {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const content = e.target.result;
+                    try {
+                        const parsedJSON = JSON.parse(content);
+                        jsonInput.value = content; // Display raw JSON in input area
+                        jsonOutput.value = JSON.stringify(parsedJSON, null, 4); // Display formatted JSON in output area
+                    } catch (error) {
+                        jsonOutput.value = 'Invalid JSON';
+                    }
+                };
+                reader.readAsText(file);
+            } else {
+                alert('Please upload a valid JSON file.');
+            }
+        }
+
+        // Handle JSON download
+        downloadButton.addEventListener('click', () => {
+            const jsonData = jsonOutput.value;
+
+            try {
+                const jsonObject = JSON.parse(jsonData);
+                const blob = new Blob([JSON.stringify(jsonObject, null, 4)], { type: 'application/json' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `formatted${Date.now()}.json`;
+                link.click();
+            } catch (error) {
+                alert('Invalid JSON. Please format your JSON before downloading.');
+            }
+        });
+
+        // Handle JSON copy to clipboard
+        copyButton.addEventListener('click', () => {
+            jsonOutput.select();
+            document.execCommand('copy');
+            copyButton.textContent = 'Copied ✔'; // Change the button text to 'Copied!'
+
+            // Revert back to original button text after 2 seconds
+            setTimeout(() => {
+                copyButton.textContent = 'Copy JSON';
+            }, 2000);
+        });
+
+        // Prevent search (Ctrl + F) in the input area
+        jsonInput.addEventListener('keydown', (event) => {
+            if (event.ctrlKey && event.key === 'f') {
+                event.preventDefault(); // Prevent Ctrl + F in the input textarea
+            }
+        });
+
+        // Allow search (Ctrl + F) in the output area
+        jsonOutput.addEventListener('keydown', (event) => {
+            if (event.ctrlKey && event.key === 'f') {
+                // Allow Ctrl + F functionality in the output textarea
+                event.stopPropagation(); // Ensures the find functionality works
+            }
+        });
+    </script>
+</body>
+</html>
