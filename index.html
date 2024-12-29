@@ -1,36 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON Formatter</title>
+    <title>JSON Formatter with Ace Editor</title>
     <style>
+        html,
         body {
-            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             background-color: #f0f0f0;
-            margin: 0;
+            font-family: Arial, sans-serif;
         }
 
         .container {
             display: flex;
-            flex-direction: row;  /* Side-by-side layout */
-            width: 90%;
-            height: 90%;
-            background: white;
-            padding: 20px;
+            flex-direction: row;
+            width: 100vw;
+            /* Full viewport width */
+            height: 100vh;
+            /* Full viewport height */
+            background: #fff;
+            /* Background for the entire container */
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
-        .input-container, .output-container {
+        .input-container,
+        .output-container {
+            flex: 1;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            flex: 1;  /* Both sections take equal space */
-            margin: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Button container between input and output containers */
+        .button-container-middle {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+            width: 100px;
+            /* Adjust the width for better spacing */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+        }
+
+        .button-container-middle button,
+        .button-container-middle select {
+            margin: 5px 0;
         }
 
         .button-container {
@@ -47,7 +79,6 @@
             cursor: pointer;
             font-size: 12px;
             margin: 5px;
-            width: auto;
             height: 30px;
         }
 
@@ -55,75 +86,341 @@
             background-color: #0056b3;
         }
 
-        input[type="file"] {
-            display: none; /* Hide the file input */
+        .theme-toggle-button {
+            background-color: #007bff;
+            border-radius: 50%;
+            color: white;
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        textarea {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
+        .theme-dropdown {
+            background-color: #007bff;
+            color: white;
+            font-size: 12px;
+            padding: 5px 10px;
             border-radius: 4px;
-            font-family: monospace;
-            box-sizing: border-box;
-            overflow: auto;
-            resize: none;
-            white-space: pre-wrap;
-            word-wrap: break-word;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        /* Ace Editor Styles */
+        .ace-editor-wrapper {
             height: 100%;
             width: 100%;
+            position: relative;
+            overflow: auto;
         }
 
-        .copied {
-            background-color: #28a745;
+        .ace-editor {
+            height: 100% !important;
+            width: 100% !important;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: auto;
+        }
+
+        /* Light Theme */
+        body {
+            background-color: #f0f0f0;
+            color: black;
+        }
+
+        .dark-theme body {
+            background-color: #121212;
+            color: white;
+        }
+
+        .dark-theme .container {
+            background-color: #333;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .dark-theme button {
+            background-color: #444;
+            color: white;
+        }
+
+        .dark-theme button:hover {
+            background-color: #666;
+        }
+
+        .dark-theme .ace-editor {
+            border: 1px solid #444;
+        }
+
+        .dark-theme .theme-toggle-button {
+            background-color: #444;
+        }
+
+        #uploadFile {
+            display: none;
+        }
+
+        /* Custom Scrollbar Styling */
+        /* For both input and output editor scrollbars */
+        .ace-editor-wrapper::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        .ace-editor-wrapper::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 5px;
+            border: 2px solid transparent;
+            background-clip: content-box;
+        }
+
+        .ace-editor-wrapper::-webkit-scrollbar-thumb:hover {
+            background-color: #555;
+        }
+
+        .ace-editor-wrapper::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        html::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        html::-webkit-scrollbar-thumb {
+            background-color: #007bff;
+            border-radius: 10px;
+            border: 3px solid transparent;
+            background-clip: content-box;
+        }
+
+        html::-webkit-scrollbar-thumb:hover {
+            background-color: #0056b3;
+        }
+
+        html::-webkit-scrollbar-track {
+            background-color: #f0f0f0;
+        }
+
+        /* Light theme styles for middle button container */
+        .button-container-middle {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+            /* Default light theme background */
+            width: 100px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+        }
+
+        /* Dark theme styles for middle button container */
+        .dark-theme .button-container-middle {
+            background-color: #444;
+            /* Dark background for middle container */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            /* Darker shadow */
+        }
+
+        /* Light theme button and select box */
+        .button-container-middle button,
+        .button-container-middle select {
+            background-color: #007bff;
+            /* Light button color */
+            color: white;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin: 5px;
+            padding: 6px 10px;
+        }
+
+        /* Dark theme button and select box */
+        .dark-theme .button-container-middle button,
+        .dark-theme .button-container-middle select {
+            background-color: #444;
+            /* Dark background for buttons */
+            color: white;
+            border: 1px solid #666;
+        }
+
+
+        /* General Styling for Button Container in Middle */
+        .button-container-middle button,
+        .button-container-middle select {
+            background-color: #007bff;
+            /* Default light button color */
+            color: white;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin: 5px;
+            padding: 6px 10px;
+        }
+
+        .button-container-middle button:hover,
+        .button-container-middle select:hover {
+            background-color: #0056b3;
+        }
+
+        .button-container-middle button:focus,
+        .button-container-middle select:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Dark theme specific styles */
+        .dark-theme .button-container-middle button,
+        .dark-theme .button-container-middle select {
+            background-color: #444;
+            /* Dark background for buttons in dark theme */
+            color: white;
+            border: 1px solid #666;
+            /* Darker border */
+        }
+
+        .dark-theme .button-container-middle button:hover,
+        .dark-theme .button-container-middle select:hover {
+            background-color: #666;
+            /* Lighter shade for hover in dark theme */
+        }
+
+        .dark-theme .button-container-middle button:focus,
+        .dark-theme .button-container-middle select:focus {
+            box-shadow: 0 0 5px rgba(255, 165, 0, 0.6);
+            /* Focus glow in dark theme */
+        }
+
+        /* Dropdown Styling */
+        .button-container-middle select {
+            background-color: #007bff;
+            color: white;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        /* Dark theme specific dropdown styles */
+        .dark-theme .button-container-middle select {
+            background-color: #444;
+            /* Dark background for select dropdown */
+            color: white;
+            border: 1px solid #666;
+        }
+
+        /* Ensure the dropdown matches theme when hovered and focused */
+        .dark-theme .button-container-middle select:hover {
+            background-color: #666;
+            /* Lighter shade for hover */
+        }
+
+        .dark-theme .button-container-middle select:focus {
+            box-shadow: 0 0 5px rgba(255, 165, 0, 0.6);
+            /* Focus glow in dark theme */
         }
     </style>
+
+    <!-- Include Ace Editor -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-searchbox.js"></script>
 </head>
+
 <body>
     <div class="container">
         <div class="input-container">
             <div class="button-container">
-                <button id="uploadButton">Upload JSON</button> <!-- Update button id -->
-                <button id="downloadButton">Download JSON</button>
-                <button id="copyButton">Copy JSON</button>
+                <button id="findInputButton">🔍 Find Input</button>
+                <button id="replaceInputButton">🔄 Replace Input</button>
             </div>
-            <textarea id="jsonInput" placeholder="Paste your JSON here..." spellcheck="false" ></textarea>
+            <div class="ace-editor-wrapper">
+                <div id="jsonInput" class="ace-editor"></div>
+            </div>
         </div>
+
+        <!-- Button container in the middle -->
+        <div class="button-container-middle">
+            <button id="themeToggle" class="theme-toggle-button" title="Change Theme"
+                style="font-size: larger;">🌙</button>
+            <button id="copyButton" title="Copy Formatted JSON">Copy</button>
+
+            <button id="uploadButton" title="Upload JSON">Upload</button>
+            <button id="downloadButton" title="Download Formatted JSON">Download</button>
+
+            <select id="themeSelect" class="theme-dropdown" title="Select Editor Theme">
+                <option value="monokai">Monokai</option>
+                <option value="github">Github</option>
+                <option value="cobalt">Cobalt</option>
+                <option value="kr_theme">Kr Theme</option>
+                <option value="twilight">Twilight</option>
+                <option value="terminal">Terminal</option>
+                <option value="xcode">Xcode</option>
+            </select>
+        </div>
+
         <div class="output-container">
-            <textarea id="jsonOutput" placeholder="Formatted JSON will appear here..." spellcheck="false"></textarea> <!-- Made output editable -->
+            <div class="button-container">
+                <button id="findOutputButton">🔍 Find Output</button>
+                <button id="replaceOutputButton">🔄 Replace Output</button>
+            </div>
+            <div class="ace-editor-wrapper">
+                <div id="jsonOutput" class="ace-editor"></div>
+            </div>
         </div>
     </div>
 
-    <!-- Hidden file input element -->
     <input type="file" id="uploadFile" accept=".json" />
 
     <script>
-        const jsonInput = document.getElementById('jsonInput');
-        const jsonOutput = document.getElementById('jsonOutput');
-        const uploadFileInput = document.getElementById('uploadFile');
-        const uploadButton = document.getElementById('uploadButton');  // Updated button id
+        let inputEditor, outputEditor;
+        const uploadButton = document.getElementById('uploadButton');
         const downloadButton = document.getElementById('downloadButton');
         const copyButton = document.getElementById('copyButton');
+        const themeToggleButton = document.getElementById('themeToggle');
+        const themeSelect = document.getElementById('themeSelect');
+        const findInputButton = document.getElementById('findInputButton');
+        const findOutputButton = document.getElementById('findOutputButton');
+        const replaceInputButton = document.getElementById('replaceInputButton');
+        const replaceOutputButton = document.getElementById('replaceOutputButton');
+        const uploadFileInput = document.getElementById('uploadFile');
 
-        // Event listener for input in the JSON input
-        jsonInput.addEventListener('input', () => {
-            formatJSON();
-        });
+        // Initialize Ace Editors
+        function initializeAce() {
+            inputEditor = ace.edit("jsonInput");
+            inputEditor.setTheme("ace/theme/github");  // Default light theme
+            inputEditor.session.setMode("ace/mode/json");
+            inputEditor.setOptions({
+                showLineNumbers: true,
+                wrap: true,
+                tabSize: 2
+            });
 
-        // Format JSON input into JSON output
-        function formatJSON() {
-            const input = jsonInput.value;
-            try {
-                const formatted = JSON.stringify(JSON.parse(input), null, 4);
-                jsonOutput.value = formatted;
-            } catch (error) {
-                jsonOutput.value = 'Invalid JSON';
-            }
+            outputEditor = ace.edit("jsonOutput");
+            outputEditor.setTheme("ace/theme/github");  // Default light theme
+            outputEditor.session.setMode("ace/mode/json");
+            outputEditor.setOptions({
+                showLineNumbers: true,
+                wrap: true,
+                tabSize: 2
+            });
+
+            // Automatically format the JSON when the input changes
+            inputEditor.session.on('change', function () {
+                formatJSON();
+            });
         }
+
+        initializeAce();
 
         // Handle file upload by clicking the Upload JSON button
         uploadButton.addEventListener('click', () => {
-            uploadFileInput.click();  // Trigger file input when the button is clicked
+            uploadFileInput.click();
         });
 
         // Handle file upload (once a file is selected)
@@ -133,14 +430,15 @@
             const file = event.target.files[0];
             if (file && file.type === 'application/json') {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     const content = e.target.result;
                     try {
+                        inputEditor.setValue(content);
                         const parsedJSON = JSON.parse(content);
-                        jsonInput.value = content; // Display raw JSON in input area
-                        jsonOutput.value = JSON.stringify(parsedJSON, null, 4); // Display formatted JSON in output area
+                        const formattedJSON = JSON.stringify(parsedJSON, null, 4);
+                        outputEditor.setValue(formattedJSON);
                     } catch (error) {
-                        jsonOutput.value = 'Invalid JSON';
+                        outputEditor.setValue('Invalid JSON');
                     }
                 };
                 reader.readAsText(file);
@@ -149,10 +447,20 @@
             }
         }
 
+        // Format JSON (pretty print)
+        function formatJSON() {
+            const input = inputEditor.getValue();
+            try {
+                const formatted = JSON.stringify(JSON.parse(input), null, 4);
+                outputEditor.setValue(formatted);
+            } catch (error) {
+                outputEditor.setValue('Invalid JSON');
+            }
+        }
+
         // Handle JSON download
         downloadButton.addEventListener('click', () => {
-            const jsonData = jsonOutput.value;
-
+            const jsonData = outputEditor.getValue();
             try {
                 const jsonObject = JSON.parse(jsonData);
                 const blob = new Blob([JSON.stringify(jsonObject, null, 4)], { type: 'application/json' });
@@ -167,30 +475,58 @@
 
         // Handle JSON copy to clipboard
         copyButton.addEventListener('click', () => {
-            jsonOutput.select();
-            document.execCommand('copy');
-            copyButton.textContent = 'Copied ✔'; // Change the button text to 'Copied!'
-
-            // Revert back to original button text after 2 seconds
-            setTimeout(() => {
-                copyButton.textContent = 'Copy JSON';
-            }, 2000);
+            const jsonData = outputEditor.getValue();
+            navigator.clipboard.writeText(jsonData)
+                .then(() => {
+                    copyButton.textContent = 'Copied ✔';
+                    setTimeout(() => {
+                        copyButton.textContent = 'Copy';
+                    }, 2000);
+                })
+                .catch(() => {
+                    alert('Failed to copy to clipboard.');
+                });
         });
 
-        // Prevent search (Ctrl + F) in the input area
-        jsonInput.addEventListener('keydown', (event) => {
-            if (event.ctrlKey && event.key === 'f') {
-                event.preventDefault(); // Prevent Ctrl + F in the input textarea
-            }
+        // Theme toggle functionality (light/dark theme)
+        themeToggleButton.addEventListener('click', () => {
+            const isDark = document.body.classList.toggle('dark-theme');
+            themeToggleButton.textContent = isDark ? '🌞' : '🌙';
+
+            // Toggle Ace editor themes based on page theme
+            const theme = isDark ? 'monokai' : 'github';
+            inputEditor.setTheme(`ace/theme/${theme}`);
+            outputEditor.setTheme(`ace/theme/${theme}`);
         });
 
-        // Allow search (Ctrl + F) in the output area
-        jsonOutput.addEventListener('keydown', (event) => {
-            if (event.ctrlKey && event.key === 'f') {
-                // Allow Ctrl + F functionality in the output textarea
-                event.stopPropagation(); // Ensures the find functionality works
-            }
+        // Change Ace Editor theme based on selected dropdown
+        themeSelect.addEventListener('change', (event) => {
+            const selectedTheme = event.target.value;
+            inputEditor.setTheme(`ace/theme/${selectedTheme}`);
+            outputEditor.setTheme(`ace/theme/${selectedTheme}`);
         });
+
+        // Search functionality for input editor
+        findInputButton.addEventListener('click', () => {
+            inputEditor.execCommand('find');
+        });
+
+        // Search functionality for output editor
+        findOutputButton.addEventListener('click', () => {
+            outputEditor.execCommand('find');
+        });
+
+        // Replace functionality for input editor
+        replaceInputButton.addEventListener('click', () => {
+            inputEditor.execCommand('replace');
+        });
+
+        // Replace functionality for output editor
+        replaceOutputButton.addEventListener('click', () => {
+            outputEditor.execCommand('replace');
+        });
+
     </script>
 </body>
+
 </html>
