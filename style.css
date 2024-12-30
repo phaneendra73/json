@@ -354,14 +354,19 @@ body {
 
 .footer {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
+  flex-direction: column; /* Aligns the title on top and icons below */
+  align-items: center; /* Centers the content horizontally */
+  gap: 5px; /* Adds space between the title and the icons */
   font-size: 12px;
   color: #555;
   position: absolute;
   bottom: 10px;
   font-family: 'Roboto', sans-serif;
+}
+
+.footer .github-icons {
+  display: flex; /* Aligns the icons side by side */
+  gap: 10px; /* Adds space between the icons */
 }
 
 .footer .github-icon img {

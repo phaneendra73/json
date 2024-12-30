@@ -1,8 +1,8 @@
-# Custom JSON Formatter
+# JSON Formatter
 
 ## Overview
 
-**Custom JSON Formatter** is a fast, ad-free, and user-friendly tool to format, beautify, and validate your JSON data. This tool uses **Ace Editor** for efficient JSON editing and displays results in real-time with syntax highlighting.
+**This JSON Formatter** is a fast, ad-free, and user-friendly tool to format, beautify, and validate your JSON data. This tool uses **Ace Editor** for efficient JSON editing and displays results in real-time with syntax highlighting.
 
 ## Features
 
