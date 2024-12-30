@@ -28,7 +28,7 @@
 
 ## Hosting
 
-The tool is hosted at **[ https://phaneendra73.github.io/JSON_Formatter/]**.
+The tool is hosted at **https://phaneendra73.github.io/JSON_Formatter/**.
 
 ## Contributions
 
