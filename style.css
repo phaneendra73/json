@@ -1,0 +1,370 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  font-family: 'Times New Roman', Times, serif, sans-serif;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  /* Full viewport width */
+  height: 100vh;
+  /* Full viewport height */
+  background: #fff;
+  /* Background for the entire container */
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.input-container,
+.output-container {
+  flex: 1;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Button container between input and output containers */
+.button-container-middle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  width: 100px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+}
+
+.button-container-middle button,
+.button-container-middle select {
+  margin: 5px 0;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+  margin-top: 0px;
+}
+
+button {
+  border: none;
+  border-radius: 4px;
+  background-color: #e65100;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+  margin: 5px;
+  height: 30px;
+}
+
+button:hover {
+  background-color: #e65100;
+}
+
+.theme-toggle-button {
+  background-color: #e65100;
+  border-radius: 50%;
+  color: white;
+  width: 30px;
+  height: 30px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.theme-dropdown {
+  background-color: #e65100;
+  color: white;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+/* Ace Editor Styles */
+.ace-editor-wrapper {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  overflow: auto;
+}
+
+.ace-editor {
+  height: 100% !important;
+  width: 100% !important;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  overflow: auto;
+}
+
+/* Light Theme */
+body {
+  background-color: #f0f0f0;
+  color: black;
+}
+
+.dark-theme body {
+  background-color: #121212;
+  color: white;
+}
+
+.dark-theme .container {
+  background-color: #333;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.dark-theme button {
+  background-color: #444;
+  color: white;
+}
+
+.dark-theme button:hover {
+  background-color: #666;
+}
+
+.dark-theme .ace-editor {
+  border: 1px solid #444;
+}
+
+.dark-theme .theme-toggle-button {
+  background-color: #444;
+}
+
+#uploadFile {
+  display: none;
+}
+
+/* Light theme styles for middle button container */
+.button-container-middle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  width: 100px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+}
+
+/* Dark theme styles for middle button container */
+.dark-theme .button-container-middle {
+  background-color: #444;
+  /* Dark background for middle container */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  /* Darker shadow */
+}
+
+/* Light theme button and select box */
+.button-container-middle button,
+.button-container-middle select {
+  background-color: #f57c00;
+  /* Light button color */
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin: 5px;
+  padding: 6px 10px;
+}
+
+/* Dark theme button and select box */
+.dark-theme .button-container-middle button,
+.dark-theme .button-container-middle select {
+  background-color: #444;
+  /* Dark background for buttons */
+  color: white;
+  border: 1px solid #666;
+}
+
+/* General Styling for Button Container in Middle */
+.button-container-middle button,
+.button-container-middle select {
+  background-color: #f57c00;
+  /* Default light button color */
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  margin: 5px;
+  padding: 6px 10px;
+}
+
+.button-container-middle button:hover,
+.button-container-middle select:hover {
+  background-color: #e65100;
+}
+
+.button-container-middle button:focus,
+.button-container-middle select:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 152, 0, 0.5);
+}
+
+/* Dark theme specific styles */
+.dark-theme .button-container-middle button,
+.dark-theme .button-container-middle select {
+  background-color: #444;
+  /* Dark background for buttons in dark theme */
+  color: white;
+  border: 1px solid #666;
+  /* Darker border */
+}
+
+.dark-theme .button-container-middle button:hover,
+.dark-theme .button-container-middle select:hover {
+  background-color: #666;
+  /* Lighter shade for hover in dark theme */
+}
+
+.dark-theme .button-container-middle button:focus,
+.dark-theme .button-container-middle select:focus {
+  box-shadow: 0 0 5px rgba(255, 152, 0, 0.5);
+  /* Focus glow in dark theme */
+}
+
+/* Dropdown Styling */
+.button-container-middle select {
+  background-color: #f57c00;
+  color: white;
+  font-size: 12px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+/* Dark theme specific dropdown styles */
+.dark-theme .button-container-middle select {
+  background-color: #444;
+  /* Dark background for select dropdown */
+  color: white;
+  border: 1px solid #666;
+}
+
+/* Ensure the dropdown matches theme when hovered and focused */
+.dark-theme .button-container-middle select:hover {
+  background-color: #666;
+  /* Lighter shade for hover */
+}
+
+.dark-theme .button-container-middle select:focus {
+  box-shadow: 0 0 5px rgba(255, 165, 0, 0.6);
+  /* Focus glow in dark theme */
+}
+
+.Smallbtn {
+  font-size: 10px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f57c00;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: center;
+}
+
+.Smallbtn:hover {
+  background-color: #e65100;
+}
+
+.Smallbtn:focus {
+  outline: none;
+  box-shadow: 0 0 3px rgba(255, 152, 0, 0.5);
+}
+
+/* Styling for the input and output containers' button section */
+.input-container .button-container,
+.output-container .button-container {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  /* Space between buttons */
+  padding: 5px 0;
+  /* Add some padding */
+  flex-wrap: wrap;
+  /* Allow buttons to wrap if needed */
+  margin-bottom: 5px;
+  /* Space below the buttons */
+}
+
+/* Adjust the button container for a more compact layout */
+.input-container .button-container button,
+.output-container .button-container button {
+  margin: 0;
+  font-size: 10px;
+  /* Smaller font size for compactness */
+  height: 20px;
+  /* Reduce button height */
+  width: auto;
+}
+
+/* Optional: Add a separator line between the button container and the editor */
+.input-container .button-container,
+.output-container .button-container {
+  border-bottom: 1px solid #ccc;
+  /* Light separator line */
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+  /* Space before the editor */
+}
+
+/* Optional: Adjust spacing between editor and the button container */
+.ace-editor-wrapper {
+  margin-top: 5px;
+  /* Space above the Ace editor for a cleaner look */
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #555;
+  word-wrap: break-word;
+  white-space: normal;
+  max-width: 100%;
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #555;
+  position: absolute;
+  bottom: 10px;
+  font-family: 'Roboto', sans-serif;
+}
+
+.footer .github-icon img {
+  width: 20px;
+  height: 20px;
+}
