@@ -273,35 +273,3 @@ document
   .addEventListener('click', function () {
     outputEditor.session.foldAll(); // Fold all objects/arrays in the output editor
   });
-const fullScreenInputButton = document.getElementById('inputLayoutButton'); // Button to toggle input container
-const fullScreenOutputButton = document.getElementById('outputLayoutButton'); // Button to toggle output container
-
-// Toggle full-screen for input container
-fullScreenInputButton.addEventListener('click', function () {
-  const inputContainer = document.querySelector('.input-container');
-
-  if (inputContainer.classList.contains('full-screen')) {
-    inputContainer.classList.remove('full-screen');
-    inputContainer.style.height = 'auto'; // Reset height to normal
-    inputContainer.style.width = 'auto'; // Reset width to normal
-  } else {
-    inputContainer.classList.add('full-screen');
-    inputContainer.style.height = '100vh'; // Full height of the viewport
-    inputContainer.style.width = '100vw'; // Full width of the viewport
-  }
-});
-
-// Toggle full-screen for output container
-fullScreenOutputButton.addEventListener('click', function () {
-  const outputContainer = document.querySelector('.output-container');
-
-  if (outputContainer.classList.contains('full-screen')) {
-    outputContainer.classList.remove('full-screen');
-    outputContainer.style.height = 'auto'; // Reset height to normal
-    outputContainer.style.width = 'auto'; // Reset width to normal
-  } else {
-    outputContainer.classList.add('full-screen');
-    outputContainer.style.height = '100vh'; // Full height of the viewport
-    outputContainer.style.width = '100vw'; // Full width of the viewport
-  }
-});
