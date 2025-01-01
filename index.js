@@ -17,6 +17,7 @@ function initializeAce() {
   inputEditor.session.setMode('ace/mode/json');
   inputEditor.setOptions({
     showLineNumbers: true,
+    printMargin: false,
     wrap: true,
     tabSize: 2,
   });
@@ -26,6 +27,7 @@ function initializeAce() {
   outputEditor.session.setMode('ace/mode/json');
   outputEditor.setOptions({
     showLineNumbers: true,
+    printMargin: false,
     wrap: true,
     tabSize: 2,
   });
