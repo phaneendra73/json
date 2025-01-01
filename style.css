@@ -21,7 +21,7 @@ body {
   /* Full viewport height */
   background: #fff;
   /* Background for the entire container */
-  border-radius: 8px;
+  /* border-radius: 8px; */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
@@ -31,7 +31,7 @@ body {
   flex: 1;
   margin: 5px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 8px;
   padding: 5px;
   box-sizing: border-box;
   display: flex;
