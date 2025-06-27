@@ -9,12 +9,11 @@
 - **JSON Formatting**: Paste your raw JSON data, and it will be beautified with proper indentation and structure.
 - **Error Checking**: Detect invalid JSON input and display error messages.
 - **Light/Dark Themes**: Easily switch between light and dark modes for a comfortable viewing experience.
-- **Monokai Theme**: Choose the Monokai theme for a professional look.
 - **No Ads**: Enjoy an ad-free environment for a smooth user experience.
 
 ## How to Use
 
-1. **Visit the Tool**: Open the website where your JSON Formatter is hosted.
+1. **Visit the Tool**: [Live Site](https://phaneendra73.github.io/json/)
 2. **Paste JSON**: Insert your raw JSON data into the input area on the left side of the screen.
 3. **Click Format**: Press the "Format" button to beautify your JSON data.
 4. **View Results**: Your formatted JSON will appear on the right side.
@@ -28,8 +27,5 @@
 
 ## Hosting
 
-The tool is hosted at **https://phaneendra73.github.io/JSON_Formatter/**.
+The tool is hosted at **https://phaneendra73.github.io/json/**.
 
-## Contributions
-
-If you find any issues or want to suggest improvements, feel free to open an issue or submit a pull request.
